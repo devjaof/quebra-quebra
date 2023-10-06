@@ -5,7 +5,7 @@ function love.load()
     -- vai dar um ar mais 2d e pixelado
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    -- seeda o gerador de números aleatórios para que as calls 
+    -- seeda o gerador de números aleatórios para que as calls
     -- random realmente sejam random
     math.randomseed(os.time())
 
@@ -27,7 +27,12 @@ function love.load()
         ['hearts'] = love.graphics.newImage('assets/hearts.png'),
         ['particle'] = love.graphics.newImage('assets/particle.png')
     }
-    
+
+    -- os quads que são gerados através de sprite sheets
+    gFrames = {
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+    }
+
     -- inicialização do push com a resolução virtual
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
@@ -53,9 +58,9 @@ function love.load()
 
         ['music'] = love.audio.newSource('sounds/music.wav', 'static')
     }
-    
 
-    -- gerenciamento de states: 
+
+    -- gerenciamento de states:
 
     -- 1. 'start' - o começo do jogo, onde pede para apertar enter
     -- 2. 'paddle-select' - seleção de cor para o player
@@ -64,7 +69,8 @@ function love.load()
     -- 5. 'victory' - tela de vitória
     -- 6. 'game-over' - fim de jogo, mostra os scores e pode reiniciar o jogo
     gStateMachine = StateMachine {
-        ['start'] = function() return StartState() end
+        ['start'] = function() return StartState() end,
+        ['play'] = function() return PlayState() end
     }
     gStateMachine:change('start')
 
@@ -83,17 +89,15 @@ function love.update(dt)
     love.keyboard.keysPressed = {}
 end
 
-
 -- callback para lidar com a table keysPressed,
 -- não funciona para teclas que permanecem apertadas, outra função lida com isso
 function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
 end
 
-
 -- esta função é custom, usada para validar se uma tecla foi apertada,
 -- isso fora da função default love.keypressed. já que essa lógica não pode
--- ser chamada por default em outros lugares 
+-- ser chamada por default em outros lugares
 function love.keyboard.wasPressed(key)
     if love.keyboard.keysPressed[key] then
         return true
@@ -102,8 +106,7 @@ function love.keyboard.wasPressed(key)
     end
 end
 
-
--- é chamada a cada frame após o update, responsável por 
+-- é chamada a cada frame após o update, responsável por
 -- desenhar na tela tudo que a gente quiser ;)
 function love.draw()
     push:apply('start')
@@ -111,22 +114,21 @@ function love.draw()
     local backgroundWidth = gTextures['background']:getWidth()
     local backgroundHeight = gTextures['background']:getHeight()
 
-    love.graphics.draw(gTextures['background'], 
+    love.graphics.draw(gTextures['background'],
         -- desenha nas coordenadas x 0, y 0
-        0, 0, 
+        0, 0,
         -- sem rotação
         0,
         -- a escala do background deve preencher a tela toda de acordo com a virtual res
         VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
-    
+
     -- state machine para renderizar o estado atual
     gStateMachine:render()
-    
+
     displayFPS()
-    
+
     push:apply('end')
 end
-
 
 function displayFPS()
     love.graphics.setFont(gFonts['small'])
