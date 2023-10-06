@@ -30,7 +30,8 @@ function love.load()
 
     -- os quads que são gerados através de sprite sheets
     gFrames = {
-        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
+        ['balls'] = GenerateQuadsBalls(gTextures['main'])
     }
 
     -- inicialização do push com a resolução virtual
