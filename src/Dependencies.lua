@@ -12,6 +12,7 @@ Class = require 'lib/class'
 
 require 'src/constants'
 require 'src/classes/Paddle'
+require 'src/classes/Ball'
 
 -- controle de estados
 require 'src/StateMachine'
