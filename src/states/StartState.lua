@@ -15,9 +15,10 @@ function StartState:update(dt)
         gSounds['confirm']:play()
 
         if highlighted == 1 then
+            print('ta batendoa qui???')
             gStateMachine:change('serve', {
                 paddle = Paddle(1),
-                bricks = LevelMaker.createMap(),
+                bricks = LevelMaker.createMap(1),
                 health = 3,
                 score = 0
             })
