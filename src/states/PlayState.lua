@@ -5,12 +5,13 @@ function PlayState:init()
 
   self.ball = Ball(1)
 
-  -- velocidade random na bola de acordo com a velocidade do paddle
-  self.ball.dx = math.random(-PADDLE_SPEED, PADDLE_SPEED);
+  self.ball.dx = math.random(-300, 300);
   self.ball.dy = math.random(-50, -60)
 
   self.ball.x = (VIRTUAL_WIDTH / 2) - 4
   self.ball.y = VIRTUAL_HEIGHT - 42
+
+  self.bricks = LevelMaker.createMap()
 end
 
 function PlayState:update(dt)
@@ -35,16 +36,27 @@ function PlayState:update(dt)
     gSounds['paddle-hit']:play()
   end
 
+  -- colisão nos tijolo
+  for k, brick in pairs(self.bricks) do
+    if brick.inPlay and self.ball:collides(brick) then
+      brick:hit()
+    end
+  end
+
+
   if love.keyboard.wasPressed('escape') then
     love.event.quit()
   end
 end
 
 function PlayState:render()
+  for k, brick in pairs(self.bricks) do
+    brick:render()
+  end
+
   self.paddle:render()
   self.ball:render()
 
-  -- pause text, if paused
   if self.paused then
     love.graphics.setFont(gFonts['large'])
     love.graphics.printf("PAUSED", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, 'center')

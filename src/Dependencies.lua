@@ -13,6 +13,7 @@ Class = require 'lib/class'
 require 'src/constants'
 require 'src/classes/Paddle'
 require 'src/classes/Ball'
+require 'src/classes/Brick'
 
 -- controle de estados
 require 'src/StateMachine'
@@ -20,5 +21,7 @@ require 'src/StateMachine'
 require 'src/states/BaseState'
 require 'src/states/StartState'
 require 'src/states/PlayState'
+
+require 'src/LevelMaker'
 
 require 'src/Util'

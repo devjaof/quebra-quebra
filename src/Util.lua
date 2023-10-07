@@ -101,3 +101,10 @@ function GenerateQuadsBalls(atlas)
 
   return quads
 end
+
+--[[
+  Esta função serve para "destacar" os tijolo do sprite sheet.
+]]
+function GenerateQuadsBricks(atlas)
+  return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+end
