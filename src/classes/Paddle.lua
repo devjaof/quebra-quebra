@@ -1,6 +1,6 @@
 Paddle = Class {}
 
-function Paddle:init()
+function Paddle:init(skin)
     -- o x inicia no meio da tela
     self.x = VIRTUAL_WIDTH / 2 - 32
 
@@ -15,7 +15,7 @@ function Paddle:init()
     self.height = 16
 
     -- a cor do paddle
-    self.skin = 1
+    self.skin = skin
 
     -- a tamanho do paddle inicial, poderá ser alterado posteriormente
     self.size = 2
