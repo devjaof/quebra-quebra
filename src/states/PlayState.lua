@@ -53,6 +53,8 @@ function PlayState:update(dt)
   -- colisão nos tijolo
   for k, brick in pairs(self.bricks) do
     if brick.inPlay and self.ball:collides(brick) then
+      self.score = self.score + (brick.tier * 200 + brick.color * 25)
+
       brick:hit()
 
       -- lado esquerdo, só checa se a bola está se movendo para a direita
