@@ -5,7 +5,7 @@ function PlayState:init()
 
   self.ball = Ball(1)
 
-  self.ball.dx = math.random(-300, 300);
+  self.ball.dx = math.random(-200, 200);
   self.ball.dy = math.random(-50, -60)
 
   self.ball.x = (VIRTUAL_WIDTH / 2) - 4
@@ -32,7 +32,21 @@ function PlayState:update(dt)
   self.ball:update(dt)
 
   if self.ball:collides(self.paddle) then
+    -- coloca a bola pra cima do paddle caso de o bug de ficar presa
+    self.ball.y = self.paddle.y - 8
     self.ball.dy = -self.ball.dy
+
+    -- se a bola bater no lado esquerdo do paddle enquando nos movemos para a esquerda
+    if self.ball.x < self.paddle.x + (self.paddle.width / 2) and self.paddle.dx < 0 then
+      self.ball.dx = -50 + -(8 * (self.paddle.x + self.paddle.width / 2 - self.ball.x))
+
+      -- mesma coisa só que pra direita
+    elseif self.ball.x > self.paddle.x + (self.paddle.width / 2) and self.paddle.dx > 0 then
+      self.ball.dx = 50 + (8 * math.abs(self.paddle.x + self.paddle.width / 2 - self.ball.x))
+    end
+
+
+
     gSounds['paddle-hit']:play()
   end
 
@@ -40,6 +54,34 @@ function PlayState:update(dt)
   for k, brick in pairs(self.bricks) do
     if brick.inPlay and self.ball:collides(brick) then
       brick:hit()
+
+      -- lado esquerdo, só checa se a bola está se movendo para a direita
+      if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
+        -- alterna velocidade de x e reseta a posição da bola fora do tijolo
+        self.ball.dx = -self.ball.dx
+        self.ball.x = brick.x - 8
+
+        -- lado direito
+      elseif self.ball.x + 6 > brick.x + brick.width and self.ball.dx < 0 then
+        self.ball.dx = -self.ball.dx
+        self.ball.x = brick.x + 32
+
+        -- em cima
+      elseif self.ball.y < brick.y then
+        -- alterna a velocidade de y e reseta a posição da bolota fora do tijolo
+        self.ball.dy = -self.ball.dy
+        self.ball.y = brick.y - 8
+
+        -- embaixo né
+      else
+        self.ball.dy = -self.ball.dy
+        self.ball.y = brick.y + 16
+      end
+
+      -- acelerar o game né papai
+      self.ball.dy = self.ball.dy * 1.02
+
+      break
     end
   end
 
