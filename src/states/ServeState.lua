@@ -1,7 +1,6 @@
 ServeState = Class { __includes = BaseState }
 
 function ServeState:enter(params)
-  print('serve state')
   -- passa as variaveis necessárias por parametro
   self.paddle = params.paddle
   self.bricks = params.bricks

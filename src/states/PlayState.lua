@@ -1,8 +1,6 @@
 PlayState = Class { __includes = BaseState }
 
 function PlayState:enter(params)
-  print('play state params', params.ball)
-
   self.paddle = params.paddle
   self.bricks = params.bricks
   self.health = params.health
