@@ -110,8 +110,14 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+  -- renderiza os tijolo
   for k, brick in pairs(self.bricks) do
     brick:render()
+  end
+
+  -- renderiza as particulas
+  for k, brick in pairs(self.bricks) do
+    brick:renderParticles()
   end
 
   self.paddle:render()
