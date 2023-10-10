@@ -6,6 +6,7 @@ function PlayState:enter(params)
   self.health = params.health
   self.score = params.score
   self.ball = params.ball
+  self.level = params.level
 
   -- a bola começa numa velocidade aleatória nunca se sabe
   self.ball.dx = math.random(-200, 200)
@@ -55,6 +56,18 @@ function PlayState:update(dt)
 
       brick:hit()
 
+      if self:checkVictory() then
+        gSounds['victory']:play()
+
+        gStateMachine:change('victory', {
+          level = self.level,
+          paddle = self.paddle,
+          health = self.health,
+          score = self.score,
+          ball = self.ball
+        })
+      end
+
       -- lado esquerdo, só checa se a bola está se movendo para a direita
       if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
         -- alterna velocidade de x e reseta a posição da bola fora do tijolo
@@ -103,6 +116,9 @@ function PlayState:update(dt)
     end
   end
 
+  for k, brick in pairs(self.bricks) do
+      brick:update(dt)
+  end
 
   if love.keyboard.wasPressed('escape') then
     love.event.quit()
@@ -130,4 +146,14 @@ function PlayState:render()
     love.graphics.setFont(gFonts['large'])
     love.graphics.printf("Pausou o joguinho eh?", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, 'center')
   end
+end
+
+function PlayState:checkVictory()
+  for k, brick in pairs(self.bricks) do
+    if (brick.inPlay) then
+      return false
+    end
+  end
+
+  return true
 end
