@@ -71,7 +71,7 @@ end
 
 function EnterHighScoreState:render()
   love.graphics.setFont(gFonts['medium'])
-  love.graphics.printf('Sua pontuação: ' .. tostring(self.score), 0, 30,
+  love.graphics.printf('Sua pontuacao: ' .. tostring(self.score), 0, 30,
     VIRTUAL_WIDTH, 'center')
 
   love.graphics.setFont(gFonts['large'])
