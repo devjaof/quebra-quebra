@@ -23,8 +23,9 @@ function StartState:update(dt)
         paddle = Paddle(1),
         bricks = LevelMaker.createMap(1),
         health = 3,
+        level = 1,
         score = 0,
-        level = 1
+        highScores = self.highScores
       })
     else
       gStateMachine:change('high-scores', {
