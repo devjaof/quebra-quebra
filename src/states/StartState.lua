@@ -3,6 +3,10 @@ StartState = Class { __includes = BaseState }
 -- o highlight da seleção do Iniciar ou pontuações
 local highlighted = 1
 
+function StartState:enter(params)
+  self.highScores = params.highScores
+end
+
 function StartState:update(dt)
   -- alteração entre as seleções no menu
   if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('down') then
@@ -21,6 +25,10 @@ function StartState:update(dt)
         health = 3,
         score = 0,
         level = 1
+      })
+    else
+      gStateMachine:change('high-scores', {
+        highScores = self.highScores
       })
     end
   end
@@ -49,7 +57,7 @@ function StartState:render()
   if highlighted == 2 then
     love.graphics.setColor(103 / 255, 1, 1, 1)
   end
-  love.graphics.printf("PONTUACOES", 0, VIRTUAL_HEIGHT / 2 + 90,
+  love.graphics.printf("MAIORES PONTUACOES", 0, VIRTUAL_HEIGHT / 2 + 90,
     VIRTUAL_WIDTH, 'center')
 
   love.graphics.setColor(1, 1, 1, 1)

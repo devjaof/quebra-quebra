@@ -77,8 +77,11 @@ function love.load()
         ['serve'] = function() return ServeState() end,
         ['game-over'] = function() return GameOverState() end,
         ['victory'] = function() return VictoryState() end,
+        ['high-scores'] = function() return HighScoreState() end,
     }
-    gStateMachine:change('start')
+    gStateMachine:change('start', {
+        highScores = loadHighScores()
+    })
 
     -- table usava para saber qual tecla foi apertada, já que o love2d não tem essa função
     love.keyboard.keysPressed = {}
@@ -162,4 +165,47 @@ function displayFPS()
     love.graphics.setFont(gFonts['small'])
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 5, 5)
+end
+
+-- Carrega os high sore de um arquivo .lst
+function loadHighScores()
+    love.filesystem.setIdentity('quebra-quebra_scores')
+
+    -- valores default caso o arquivo nao exista
+    if not love.filesystem.getInfo('quebra-quebra_scores.lst') then
+        local scores = ''
+        for i = 10, 1, -1 do
+            scores = scores .. '---\n'
+            scores = scores .. '---\n'
+        end
+
+        love.filesystem.write('quebra-quebra_scores.lst', scores)
+    end
+
+    local readingName = true
+    local currentName = nil
+    local counter = 1
+
+    -- inicializa uma tabela de score vazia
+    local scores = {}
+    for i = 1, 10 do
+        scores[i] = {
+            name = nil,
+            score = nil
+        }
+    end
+
+    -- iteração no arquivo de save pegando os nomes e scores
+    for line in love.filesystem.lines('quebra-quebra_scores.lst') do
+        if readingName then
+            scores[counter].name = string.sub(line, 1, 3)
+        else
+            scores[counter].score = tonumber(line)
+            counter = counter + 1
+        end
+
+        readingName = not readingName
+    end
+
+    return scores
 end
